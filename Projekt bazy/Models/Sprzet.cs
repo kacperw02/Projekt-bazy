@@ -15,9 +15,8 @@ namespace Projekt_bazy.Models
         public DateTime DataWstawienia { get; set; }
 
         [Required(ErrorMessage = "MagazynId jest wymagane")]
-        public int? MagazynId { get; set; }
+        public int MagazynId { get; set; }
 
-        [ForeignKey("MagazynId")]
-        public Magazyn Magazyn { get; set; }
+        public Magazyn? Magazyn { get; set; }
     }
 }

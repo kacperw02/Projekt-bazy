@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Projekt_bazy.Models
 {
-    public class Zamowienie
+    public class Zamowienia
     {
         [Key]
         public int IdZamowienia { get; set; }
@@ -15,9 +15,8 @@ namespace Projekt_bazy.Models
         public DateTime DataZamowienia { get; set; }
 
         [Required(ErrorMessage = "IdZamawiajacego jest wymagane")]
-        public int IdZamawiajacego { get; set; }
+        public int ZamawiajacyId { get; set; }
 
-        [ForeignKey("IdZamawiajacego")]
-        public Personel Zamawiajacy { get; set; }
+        public Personel? Zamawiajacy { get; set; }
     }
 }

@@ -18,9 +18,10 @@ namespace Projekt_bazy.Models
         public string Stopien { get; set; }
 
         [Required(ErrorMessage = "Przynależność jest wymagana")]
-        public int? PrzynaleznoscDoMagazynu { get; set; }
+        public int Przynaleznosc { get; set; }
 
-        [ForeignKey("PrzynaleznoscDoMagazynu")]
-        public Magazyn Magazyn { get; set; }
+        public Magazyn? Magazyn { get; set; }
+
+        public ICollection<Zamowienia>? Zamowienia { get; set; }
     }
 }
