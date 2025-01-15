@@ -151,16 +151,13 @@ namespace Projekt_bazy.Controllers
             }
             catch (DbUpdateException ex)
             {
-                // Logowanie błędu (opcjonalne)
                 Console.WriteLine($"Error deleting magazyn: {ex.Message}");
 
-                // Wyświetlenie komunikatu użytkownikowi
                 TempData["ErrorMessage"] = "Nie można usunąć magazynu, w którym znajdują się sprzęty. Proszę przenieść sprzęty do innego magazynu przed usunięciem.";
                 return RedirectToAction(nameof(Index));
             }
         }
 
-        // Metoda pomocnicza do sprawdzania istnienia magazynu
         private bool MagazynExists(int id)
         {
             return _context.Magazyny.Any(e => e.IdMagazynu == id);

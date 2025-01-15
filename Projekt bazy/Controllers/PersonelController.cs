@@ -173,14 +173,23 @@ namespace Projekt_bazy.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var personel = await _context.Personel.FindAsync(id);
-            if (personel != null)
+            try
             {
-                _context.Personel.Remove(personel);
+                var personel = await _context.Personel.FindAsync(id);
+                if (personel != null)
+                {
+                    _context.Personel.Remove(personel);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"Error deleting person: {ex.Message}");
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                TempData["ErrorMessage"] = "Nie można usunąć personelu, do którego jest przypisane zamówienie.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool PersonelExists(int id)
