@@ -41,14 +41,23 @@ namespace Projekt_bazy.Controllers
             {
                 return NotFound();
             }
-
+            var magazynInfo = $"{sprzet.Magazyn.Funkcjonalnosc} - {sprzet.Magazyn.Lokalizacja}";
+            ViewData["MagazynInfo"] = magazynInfo;
             return View(sprzet);
         }
 
         // GET: Sprzet/Create
         public IActionResult Create()
         {
-            ViewData["MagazynId"] = new SelectList(_context.Magazyny, "IdMagazynu", "Funkcjonalnosc");
+            ViewData["MagazynId"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName"
+            );
             return View();
         }
 
@@ -65,7 +74,17 @@ namespace Projekt_bazy.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MagazynId"] = new SelectList(_context.Magazyny, "IdMagazynu", "Funkcjonalnosc", sprzet.MagazynId);
+            // Połączenie Funkcjonalnosc i Lokalizacja
+            ViewData["MagazynId"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName",
+                sprzet.MagazynId
+            );
             return View(sprzet);
         }
 
@@ -82,7 +101,18 @@ namespace Projekt_bazy.Controllers
             {
                 return NotFound();
             }
-            ViewData["MagazynId"] = new SelectList(_context.Magazyny, "IdMagazynu", "Funkcjonalnosc", sprzet.MagazynId);
+
+            // Połączenie Funkcjonalnosc i Lokalizacja
+            ViewData["MagazynId"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName",
+                sprzet.MagazynId
+            );
             return View(sprzet);
         }
 

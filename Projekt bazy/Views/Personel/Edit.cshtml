@@ -29,19 +29,24 @@
                 <span asp-validation-for="Stopien" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="NumerOdznaki" class="control-label"></label>
+                <input asp-for="NumerOdznaki" class="form-control" />
+                <span asp-validation-for="NumerOdznaki" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Przynaleznosc" class="control-label"></label>
                 <select asp-for="Przynaleznosc" class="form-control" asp-items="ViewBag.Przynaleznosc"></select>
                 <span asp-validation-for="Przynaleznosc" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-success" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

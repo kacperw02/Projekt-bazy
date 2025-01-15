@@ -16,5 +16,6 @@ namespace Projekt_bazy.Models
 
         public ICollection<Sprzet>? Sprzety { get; set; }
         public ICollection<Personel>? Personel { get; set; }
+        public ICollection<Zamowienia>? Zamowienia { get; set; }
     }
 }

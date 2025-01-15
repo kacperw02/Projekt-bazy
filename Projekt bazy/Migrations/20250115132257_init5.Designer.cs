@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Projekt_bazy.Data;
 
@@ -11,9 +12,11 @@ using Projekt_bazy.Data;
 namespace Projekt_bazy.Migrations
 {
     [DbContext(typeof(MagazynDbContext))]
-    partial class MagazynDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250115132257_init5")]
+    partial class init5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,9 +61,6 @@ namespace Projekt_bazy.Migrations
                     b.Property<string>("Nazwisko")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumerOdznaki")
-                        .HasColumnType("int");
 
                     b.Property<int>("Przynaleznosc")
                         .HasColumnType("int");
@@ -112,12 +112,6 @@ namespace Projekt_bazy.Migrations
                     b.Property<DateTime>("DataZamowienia")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MagazynId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MagazynIdMagazynu")
-                        .HasColumnType("int");
-
                     b.Property<string>("NazwaSprzetu")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -126,10 +120,6 @@ namespace Projekt_bazy.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("IdZamowienia");
-
-                    b.HasIndex("MagazynId");
-
-                    b.HasIndex("MagazynIdMagazynu");
 
                     b.HasIndex("ZamawiajacyId");
 
@@ -160,23 +150,11 @@ namespace Projekt_bazy.Migrations
 
             modelBuilder.Entity("Projekt_bazy.Models.Zamowienia", b =>
                 {
-                    b.HasOne("Projekt_bazy.Models.Magazyn", "Magazyn")
-                        .WithMany()
-                        .HasForeignKey("MagazynId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Projekt_bazy.Models.Magazyn", null)
-                        .WithMany("Zamowienia")
-                        .HasForeignKey("MagazynIdMagazynu");
-
                     b.HasOne("Projekt_bazy.Models.Personel", "Zamawiajacy")
                         .WithMany("Zamowienia")
                         .HasForeignKey("ZamawiajacyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Magazyn");
 
                     b.Navigation("Zamawiajacy");
                 });
@@ -186,8 +164,6 @@ namespace Projekt_bazy.Migrations
                     b.Navigation("Personel");
 
                     b.Navigation("Sprzety");
-
-                    b.Navigation("Zamowienia");
                 });
 
             modelBuilder.Entity("Projekt_bazy.Models.Personel", b =>

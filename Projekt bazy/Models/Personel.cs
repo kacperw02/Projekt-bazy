@@ -17,6 +17,9 @@ namespace Projekt_bazy.Models
         [Required(ErrorMessage = "Stopień jest wymagany")]
         public string Stopien { get; set; }
 
+        [Required(ErrorMessage = "Numer odznaki jest wymagany")]
+        public int NumerOdznaki { get; set; }
+
         [Required(ErrorMessage = "Przynależność jest wymagana")]
         public int Przynaleznosc { get; set; }
 

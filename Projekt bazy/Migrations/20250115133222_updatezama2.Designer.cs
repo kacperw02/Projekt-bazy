@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Projekt_bazy.Data;
 
@@ -11,9 +12,11 @@ using Projekt_bazy.Data;
 namespace Projekt_bazy.Migrations
 {
     [DbContext(typeof(MagazynDbContext))]
-    partial class MagazynDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250115133222_updatezama2")]
+    partial class updatezama2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

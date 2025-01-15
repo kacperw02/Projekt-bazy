@@ -22,7 +22,7 @@ namespace Projekt_bazy.Controllers
         // GET: Zamowienia
         public async Task<IActionResult> Index()
         {
-            var magazynDbContext = _context.Zamowienia.Include(z => z.Zamawiajacy);
+            var magazynDbContext = _context.Zamowienia.Include(z => z.Magazyn).Include(z => z.Zamawiajacy);
             return View(await magazynDbContext.ToListAsync());
         }
 
@@ -35,12 +35,18 @@ namespace Projekt_bazy.Controllers
             }
 
             var zamowienia = await _context.Zamowienia
+                .Include(z => z.Magazyn)
                 .Include(z => z.Zamawiajacy)
                 .FirstOrDefaultAsync(m => m.IdZamowienia == id);
             if (zamowienia == null)
             {
                 return NotFound();
             }
+            var zamawiajacyInfo = $"{zamowienia.Zamawiajacy.Imie} {zamowienia.Zamawiajacy.Nazwisko} Odznaka:{zamowienia.Zamawiajacy.NumerOdznaki}";
+            var magazynInfo = $"{zamowienia.Magazyn.Funkcjonalnosc} - {zamowienia.Magazyn.Lokalizacja}";
+
+            ViewData["ZamawiajacyInfo"] = zamawiajacyInfo;
+            ViewData["MagazynInfo"] = magazynInfo;
 
             return View(zamowienia);
         }
@@ -48,7 +54,24 @@ namespace Projekt_bazy.Controllers
         // GET: Zamowienia/Create
         public IActionResult Create()
         {
-            ViewData["ZamawiajacyId"] = new SelectList(_context.Personel, "IdPersonelu", "Imie");
+            ViewData["ZamawiajacyId"] = new SelectList(
+                _context.Personel.Select(p => new
+                {
+                    IdPersonelu = p.IdPersonelu,
+                    DisplayName = $"{p.Imie} {p.Nazwisko} Nr odznaki: {p.NumerOdznaki}"
+                }),
+                "IdPersonelu",
+                "DisplayName"
+            );
+            ViewData["MagazynId"] = new SelectList(
+                 _context.Magazyny.Select(m => new
+                 {
+                     IdMagazynu = m.IdMagazynu,
+                     DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                 }),
+                "IdMagazynu",
+                "DisplayName"
+                );
             return View();
         }
 
@@ -57,7 +80,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdZamowienia,NazwaSprzetu,DataZamowienia,ZamawiajacyId")] Zamowienia zamowienia)
+        public async Task<IActionResult> Create([Bind("IdZamowienia,NazwaSprzetu,DataZamowienia,ZamawiajacyId,MagazynId")] Zamowienia zamowienia)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +88,29 @@ namespace Projekt_bazy.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ZamawiajacyId"] = new SelectList(_context.Personel, "IdPersonelu", "Imie", zamowienia.ZamawiajacyId);
+
+            ViewData["MagazynId"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName",
+                zamowienia.MagazynId
+            );
+
+            ViewData["ZamawiajacyId"] = new SelectList(
+                _context.Personel.Select(p => new
+                {
+                    IdPersonelu = p.IdPersonelu,
+                    DisplayName = $"{p.Imie} {p.Nazwisko} Nr odznaki: {p.NumerOdznaki}"
+                }),
+                "IdPersonelu",
+                "DisplayName",
+                zamowienia.ZamawiajacyId
+            );
+
             return View(zamowienia);
         }
 
@@ -82,7 +127,29 @@ namespace Projekt_bazy.Controllers
             {
                 return NotFound();
             }
-            ViewData["ZamawiajacyId"] = new SelectList(_context.Personel, "IdPersonelu", "Imie", zamowienia.ZamawiajacyId);
+
+            ViewData["MagazynId"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName",
+                zamowienia.MagazynId
+            );
+
+            ViewData["ZamawiajacyId"] = new SelectList(
+                _context.Personel.Select(p => new
+                {
+                    IdPersonelu = p.IdPersonelu,
+                    DisplayName = $"{p.Imie} {p.Nazwisko} Nr odznaki: {p.NumerOdznaki}"
+                }),
+                "IdPersonelu",
+                "DisplayName",
+                zamowienia.ZamawiajacyId
+            );
+
             return View(zamowienia);
         }
 
@@ -91,7 +158,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdZamowienia,NazwaSprzetu,DataZamowienia,ZamawiajacyId")] Zamowienia zamowienia)
+        public async Task<IActionResult> Edit(int id, [Bind("IdZamowienia,NazwaSprzetu,DataZamowienia,ZamawiajacyId,MagazynId")] Zamowienia zamowienia)
         {
             if (id != zamowienia.IdZamowienia)
             {
@@ -118,7 +185,29 @@ namespace Projekt_bazy.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ZamawiajacyId"] = new SelectList(_context.Personel, "IdPersonelu", "Imie", zamowienia.ZamawiajacyId);
+
+            ViewData["MagazynId"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName",
+                zamowienia.MagazynId
+            );
+
+            ViewData["ZamawiajacyId"] = new SelectList(
+                _context.Personel.Select(p => new
+                {
+                    IdPersonelu = p.IdPersonelu,
+                    DisplayName = $"{p.Imie} {p.Nazwisko} Nr odznaki: {p.NumerOdznaki}"
+                }),
+                "IdPersonelu",
+                "DisplayName",
+                zamowienia.ZamawiajacyId
+            );
+
             return View(zamowienia);
         }
 
@@ -131,6 +220,7 @@ namespace Projekt_bazy.Controllers
             }
 
             var zamowienia = await _context.Zamowienia
+                .Include(z => z.Magazyn)
                 .Include(z => z.Zamawiajacy)
                 .FirstOrDefaultAsync(m => m.IdZamowienia == id);
             if (zamowienia == null)

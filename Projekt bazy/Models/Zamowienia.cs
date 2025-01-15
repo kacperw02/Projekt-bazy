@@ -14,9 +14,13 @@ namespace Projekt_bazy.Models
         [Required(ErrorMessage = "Data Zamówienia jest wymagana")]
         public DateTime DataZamowienia { get; set; }
 
-        [Required(ErrorMessage = "IdZamawiajacego jest wymagane")]
+        [Required(ErrorMessage = "Zamawiajacy jest wymagane")]
         public int ZamawiajacyId { get; set; }
-
         public Personel? Zamawiajacy { get; set; }
+
+        [Required(ErrorMessage = "Magazyn jest wymagany")]
+        public int MagazynId { get; set; }
+
+        public Magazyn? Magazyn { get; set; }
     }
 }

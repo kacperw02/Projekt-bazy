@@ -41,6 +41,8 @@ namespace Projekt_bazy.Controllers
             {
                 return NotFound();
             }
+            var magazynInfo = $"{personel.Magazyn.Funkcjonalnosc} - {personel.Magazyn.Lokalizacja}";
+            ViewData["MagazynInfo"] = magazynInfo;
 
             return View(personel);
         }
@@ -48,7 +50,15 @@ namespace Projekt_bazy.Controllers
         // GET: Personel/Create
         public IActionResult Create()
         {
-            ViewData["Przynaleznosc"] = new SelectList(_context.Magazyny, "IdMagazynu", "Funkcjonalnosc");
+            ViewData["Przynaleznosc"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName"
+            );
             return View();
         }
 
@@ -57,7 +67,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdPersonelu,Imie,Nazwisko,Stopien,Przynaleznosc")] Personel personel)
+        public async Task<IActionResult> Create([Bind("IdPersonelu,Imie,Nazwisko,Stopien,NumerOdznaki,Przynaleznosc")] Personel personel)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +75,15 @@ namespace Projekt_bazy.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Przynaleznosc"] = new SelectList(_context.Magazyny, "IdMagazynu", "Funkcjonalnosc", personel.Przynaleznosc);
+            ViewData["Przynaleznosc"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName"
+            );
             return View(personel);
         }
 
@@ -82,7 +100,16 @@ namespace Projekt_bazy.Controllers
             {
                 return NotFound();
             }
-            ViewData["Przynaleznosc"] = new SelectList(_context.Magazyny, "IdMagazynu", "Funkcjonalnosc", personel.Przynaleznosc);
+            ViewData["Przynaleznosc"] = new SelectList(
+                _context.Magazyny.Select(m => new
+                {
+                    IdMagazynu = m.IdMagazynu,
+                    DisplayName = $"{m.Funkcjonalnosc} - {m.Lokalizacja}"
+                }),
+                "IdMagazynu",
+                "DisplayName",
+                personel.Przynaleznosc
+            );
             return View(personel);
         }
 
@@ -91,7 +118,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdPersonelu,Imie,Nazwisko,Stopien,Przynaleznosc")] Personel personel)
+        public async Task<IActionResult> Edit(int id, [Bind("IdPersonelu,Imie,Nazwisko,Stopien,NumerOdznaki,Przynaleznosc")] Personel personel)
         {
             if (id != personel.IdPersonelu)
             {
@@ -131,6 +158,7 @@ namespace Projekt_bazy.Controllers
             }
 
             var personel = await _context.Personel
+                .Include(p => p.Magazyn)
                 .FirstOrDefaultAsync(m => m.IdPersonelu == id);
             if (personel == null)
             {
@@ -145,25 +173,14 @@ namespace Projekt_bazy.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
+            var personel = await _context.Personel.FindAsync(id);
+            if (personel != null)
             {
-                var personel = await _context.Personel.FindAsync(id);
-                if (personel != null)
-                {
-                    _context.Personel.Remove(personel);
-                    await _context.SaveChangesAsync();
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Personel.Remove(personel);
             }
-            catch (DbUpdateException ex)
-            {
-                // Logowanie błędu (opcjonalne)
-                Console.WriteLine($"Error deleting magazyn: {ex.Message}");
 
-                // Wyświetlenie komunikatu użytkownikowi
-                TempData["ErrorMessage"] = "Nie można usunąć personelu, do którego jest przypisane zamówienie.";
-                return RedirectToAction(nameof(Index));
-            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool PersonelExists(int id)
