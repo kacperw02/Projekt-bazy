@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Projekt_bazy.Models
 {
@@ -6,11 +7,20 @@ namespace Projekt_bazy.Models
     {
         [Key]
         public int IdPersonelu { get; set; }
-        public string Imie { get; set; }
-        public string Nazwisko { get; set; }
-        public string Stopien { get; set; }
-        public int? PrzynaleznoscDoMagazynu { get; set; }
-        public Magazyn Magazyn { get; set; }
 
+        [Required(ErrorMessage = "Imię jest wymagane")]
+        public string Imie { get; set; }
+
+        [Required(ErrorMessage = "Nazwisko jest wymagane")]
+        public string Nazwisko { get; set; }
+
+        [Required(ErrorMessage = "Stopień jest wymagany")]
+        public string Stopien { get; set; }
+
+        [Required(ErrorMessage = "Przynależność jest wymagana")]
+        public int? PrzynaleznoscDoMagazynu { get; set; }
+
+        [ForeignKey("PrzynaleznoscDoMagazynu")]
+        public Magazyn Magazyn { get; set; }
     }
 }
