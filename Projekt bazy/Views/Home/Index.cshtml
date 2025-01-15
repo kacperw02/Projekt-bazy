@@ -2,7 +2,15 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="jumbotron text-center">
+    <h1 class="display-4">Witamy w systemie magazynu wojskowego</h1>
+    <p class="lead">Zarządzaj sprzętem, personelem i zamówieniami w jednym miejscu.</p>
+    <hr class="my-4">
+    <p>Wybierz jedną z poniższych opcji:</p>
+    <div class="d-flex justify-content-center">
+        <a asp-controller="Sprzet" asp-action="Index" class="btn btn-success btn-lg mx-2">Sprzęty</a>
+        <a asp-controller="Personel" asp-action="Index" class="btn btn-success btn-lg mx-2">Personel</a>
+        <a asp-controller="Zamowienia" asp-action="Index" class="btn btn-success btn-lg mx-2">Zamówienia</a>
+        <a asp-controller="Magazyny" asp-action="Index" class="btn btn-success btn-lg mx-2">Magazyny</a>
+    </div>
 </div>
