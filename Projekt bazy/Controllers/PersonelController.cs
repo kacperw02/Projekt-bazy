@@ -131,7 +131,6 @@ namespace Projekt_bazy.Controllers
             }
 
             var personel = await _context.Personel
-                .Include(p => p.Magazyn)
                 .FirstOrDefaultAsync(m => m.IdPersonelu == id);
             if (personel == null)
             {
@@ -146,14 +145,25 @@ namespace Projekt_bazy.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var personel = await _context.Personel.FindAsync(id);
-            if (personel != null)
+            try
             {
-                _context.Personel.Remove(personel);
+                var personel = await _context.Personel.FindAsync(id);
+                if (personel != null)
+                {
+                    _context.Personel.Remove(personel);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateException ex)
+            {
+                // Logowanie błędu (opcjonalne)
+                Console.WriteLine($"Error deleting magazyn: {ex.Message}");
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                // Wyświetlenie komunikatu użytkownikowi
+                TempData["ErrorMessage"] = "Nie można usunąć personelu, do którego jest przypisane zamówienie.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool PersonelExists(int id)

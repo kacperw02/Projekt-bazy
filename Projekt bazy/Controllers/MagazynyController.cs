@@ -116,7 +116,7 @@ namespace Projekt_bazy.Controllers
             return View(magazyn);
         }
 
-        // GET: Magazyny/Delete/5
+        /// GET: Magazyny/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -139,16 +139,28 @@ namespace Projekt_bazy.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var magazyn = await _context.Magazyny.FindAsync(id);
-            if (magazyn != null)
+            try
             {
-                _context.Magazyny.Remove(magazyn);
+                var magazyn = await _context.Magazyny.FindAsync(id);
+                if (magazyn != null)
+                {
+                    _context.Magazyny.Remove(magazyn);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateException ex)
+            {
+                // Logowanie błędu (opcjonalne)
+                Console.WriteLine($"Error deleting magazyn: {ex.Message}");
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                // Wyświetlenie komunikatu użytkownikowi
+                TempData["ErrorMessage"] = "Nie można usunąć magazynu, w którym znajdują się sprzęty. Proszę przenieść sprzęty do innego magazynu przed usunięciem.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
+        // Metoda pomocnicza do sprawdzania istnienia magazynu
         private bool MagazynExists(int id)
         {
             return _context.Magazyny.Any(e => e.IdMagazynu == id);
