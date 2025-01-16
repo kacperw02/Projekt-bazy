@@ -1,1 +1,37 @@
+Projekt ASP.NET MVC 
 
+1.Uruchomienie aplikacji 
+
+W pliku ‘’appsettings.json’’ nalezy zmienić linie: 
+
+"DevConnection": "Server= (localdb)\MSSQLLocalDB;Database=MagazynDB;Trusted_Connection=True;TrustServerCertificate=True;" 
+
+‘’(localdb)\MSSQLLocalDB’’ - nalezy wprowadzic swoj serwer bazodanowy. W projkecie korzystaliśmy z Microsft SQL Server.) 
+
+Upewnic się że na serwerzy nie ma bazy danych “MagazynDB”. Gdy już taką mamy, nalezy ją usunąć lub Zmienić nazwe w pliku na inną. 
+
+Po zmianiach w ‘’appsettings.json’’, należy odpalić ‘’Konsole menadżera pakietów’’ i wpisać: 
+UPDATE-DATABASE 
+
+Konfiguracja
+
+Zeby zalogować sie do aplikacji, mamy do wyboru dwie możliwośc 
+
+Konto zolnierz@wojskorp.pl z hasłem: User123! 
+
+Konto general@wojskorp.pl z haslem Admin123!
+
+Opis aplikacji
+Aplikacja ta jest systemem zarządzania magazynem, który umożliwia przeglądanie, zarządzanie oraz wprowadzanie danych dotyczących magazynów, sprzętu, zamówień oraz personelu. System obsługuje dwie główne role użytkowników:
+
+Administrator: ma możliwość zarządzania danymi w pełnym zakresie, w tym dodawania, edytowania i usuwania wpisów oraz tworzenia nowych zamówień.
+Użytkownik: ma dostęp do przeglądania danych, wyszukiwania oraz składania zamówień, jednak nie ma uprawnień do edycji czy usuwania danych.
+
+Funkcjonalności aplikacji:
+
+Zarządzanie magazynami: dodawanie, edytowanie, przeglądanie oraz usuwanie informacji o magazynach.
+Zarządzanie sprzętem: przypisywanie sprzętu do magazynów, edycja oraz usuwanie danych o sprzęcie.
+Obsługa zamówień: tworzenie i przeglądanie zamówień.
+Zarządzanie personelem: rejestrowanie i przeglądanie danych pracowników.
+Autoryzacja i role użytkowników: wbudowany system logowania z podziałem na role, zapewniający bezpieczeństwo danych oraz ograniczenie dostępu do funkcji administracyjnych.
+Aplikacja jest napisana w technologii ASP.NET Core MVC z użyciem Entity Framework Core do obsługi bazy danych SQL Server
