@@ -1,4 +1,4 @@
-Projekt ASP.NET MVC 
+Projekt Magazynu Wojskowego ASP.NET MVC 
 
 1.Uruchomienie aplikacji 
 
