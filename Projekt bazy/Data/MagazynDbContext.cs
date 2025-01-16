@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Projekt_bazy.Models;
 
 namespace Projekt_bazy.Data
 {
-    public class MagazynDbContext : DbContext
+    public class MagazynDbContext : IdentityDbContext<IdentityUser>
     {
         public MagazynDbContext(DbContextOptions<MagazynDbContext> options)
             : base(options)
