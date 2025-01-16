@@ -56,8 +56,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Zamowienia/Create
-        [Authorize]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public IActionResult Create()
         {
             ViewData["ZamawiajacyId"] = new SelectList(
@@ -86,7 +85,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([Bind("IdZamowienia,NazwaSprzetu,DataZamowienia,ZamawiajacyId,MagazynId")] Zamowienia zamowienia)
         {
             if (ModelState.IsValid)

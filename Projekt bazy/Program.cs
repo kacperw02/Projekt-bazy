@@ -69,8 +69,8 @@ static async Task SeedRolesAndUsers(IServiceProvider serviceProvider)
 
     var adminUser = new IdentityUser
     {
-        UserName = "admin@example.com",
-        Email = "admin@example.com",
+        UserName = "general@wojskorp.pl",
+        Email = "general@wojskorp.pl",
         EmailConfirmed = true
     };
 
@@ -85,8 +85,8 @@ static async Task SeedRolesAndUsers(IServiceProvider serviceProvider)
 
     var standardUser = new IdentityUser
     {
-        UserName = "user@example.com",
-        Email = "user@example.com",
+        UserName = "zolnierz@wojskorp.pl",
+        Email = "zolnierz@wojskorp.pl",
         EmailConfirmed = true
     };
 
