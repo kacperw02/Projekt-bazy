@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +10,7 @@ using Projekt_bazy.Models;
 
 namespace Projekt_bazy.Controllers
 {
+    [Authorize]
     public class PersonelController : Controller
     {
         private readonly MagazynDbContext _context;
@@ -20,6 +21,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Personel
+        [AllowAnonymous] // Dostęp dla wszystkich użytkowników (w tym niezalogowanych)
         public async Task<IActionResult> Index()
         {
             var magazynDbContext = _context.Personel.Include(p => p.Magazyn);
@@ -27,6 +29,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Personel/Details/5
+        [AllowAnonymous] // Dostęp dla wszystkich użytkowników
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,6 +51,8 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Personel/Create
+        [Authorize]
+        [Authorize(Roles = "Admin")] 
         public IActionResult Create()
         {
             ViewData["Przynaleznosc"] = new SelectList(
@@ -59,14 +64,19 @@ namespace Projekt_bazy.Controllers
                 "IdMagazynu",
                 "DisplayName"
             );
+            if (!User.IsInRole("Admin"))
+            {
+                TempData["AuthorizationMessage"] = "Musisz być zalogowany jako administrator, aby dodać personel.";
+                return RedirectToAction("Login", "Account");
+            }
             return View();
+
         }
 
         // POST: Personel/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> Create([Bind("IdPersonelu,Imie,Nazwisko,Stopien,NumerOdznaki,Przynaleznosc")] Personel personel)
         {
             if (ModelState.IsValid)
@@ -88,6 +98,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Personel/Edit/5
+        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -114,10 +125,9 @@ namespace Projekt_bazy.Controllers
         }
 
         // POST: Personel/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> Edit(int id, [Bind("IdPersonelu,Imie,Nazwisko,Stopien,NumerOdznaki,Przynaleznosc")] Personel personel)
         {
             if (id != personel.IdPersonelu)
@@ -150,6 +160,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Personel/Delete/5
+        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,6 +182,7 @@ namespace Projekt_bazy.Controllers
         // POST: Personel/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
@@ -186,7 +198,6 @@ namespace Projekt_bazy.Controllers
             catch (DbUpdateException ex)
             {
                 Console.WriteLine($"Error deleting person: {ex.Message}");
-
                 TempData["ErrorMessage"] = "Nie można usunąć personelu, do którego jest przypisane zamówienie.";
                 return RedirectToAction(nameof(Index));
             }

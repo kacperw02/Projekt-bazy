@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Projekt_bazy.Models;
 
 namespace Projekt_bazy.Controllers
 {
+    [Authorize]
     public class SprzetController : Controller
     {
         private readonly MagazynDbContext _context;
@@ -20,6 +22,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Sprzet
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var magazynDbContext = _context.Sprzety.Include(s => s.Magazyn);
@@ -27,6 +30,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Sprzet/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,6 +51,8 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Sprzet/Create
+        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["MagazynId"] = new SelectList(
@@ -66,6 +72,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("IdSprzetu,NazwaSprzetu,DataWstawienia,MagazynId")] Sprzet sprzet)
         {
             if (ModelState.IsValid)
@@ -89,6 +96,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Sprzet/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -121,6 +129,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("IdSprzetu,NazwaSprzetu,DataWstawienia,MagazynId")] Sprzet sprzet)
         {
             if (id != sprzet.IdSprzetu)
@@ -153,6 +162,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Sprzet/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -174,6 +184,7 @@ namespace Projekt_bazy.Controllers
         // POST: Sprzet/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var sprzet = await _context.Sprzety.FindAsync(id);

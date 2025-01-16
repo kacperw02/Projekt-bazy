@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Projekt_bazy.Models;
 
 namespace Projekt_bazy.Controllers
 {
+    [Authorize]
     public class ZamowieniaController : Controller
     {
         private readonly MagazynDbContext _context;
@@ -20,6 +22,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Zamowienia
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var magazynDbContext = _context.Zamowienia.Include(z => z.Magazyn).Include(z => z.Zamawiajacy);
@@ -27,6 +30,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Zamowienia/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,6 +56,8 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Zamowienia/Create
+        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["ZamawiajacyId"] = new SelectList(
@@ -80,6 +86,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("IdZamowienia,NazwaSprzetu,DataZamowienia,ZamawiajacyId,MagazynId")] Zamowienia zamowienia)
         {
             if (ModelState.IsValid)
@@ -115,6 +122,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Zamowienia/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -158,6 +166,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("IdZamowienia,NazwaSprzetu,DataZamowienia,ZamawiajacyId,MagazynId")] Zamowienia zamowienia)
         {
             if (id != zamowienia.IdZamowienia)
@@ -212,6 +221,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Zamowienia/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -234,6 +244,7 @@ namespace Projekt_bazy.Controllers
         // POST: Zamowienia/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var zamowienia = await _context.Zamowienia.FindAsync(id);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Projekt_bazy.Models;
 
 namespace Projekt_bazy.Controllers
 {
+    [Authorize]
     public class MagazynyController : Controller
     {
         private readonly MagazynDbContext _context;
@@ -20,12 +22,14 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Magazyny
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Magazyny.ToListAsync());
         }
 
         // GET: Magazyny/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,6 +48,8 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Magazyny/Create
+        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +60,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("IdMagazynu,Funkcjonalnosc,Lokalizacja")] Magazyn magazyn)
         {
             if (ModelState.IsValid)
@@ -66,6 +73,7 @@ namespace Projekt_bazy.Controllers
         }
 
         // GET: Magazyny/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +94,7 @@ namespace Projekt_bazy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("IdMagazynu,Funkcjonalnosc,Lokalizacja")] Magazyn magazyn)
         {
             if (id != magazyn.IdMagazynu)
@@ -117,6 +126,7 @@ namespace Projekt_bazy.Controllers
         }
 
         /// GET: Magazyny/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +147,7 @@ namespace Projekt_bazy.Controllers
         // POST: Magazyny/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
